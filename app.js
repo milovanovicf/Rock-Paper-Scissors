@@ -1,3 +1,11 @@
+const choice = document.querySelectorAll(".choice");
+const results = document.querySelector(".result");
+const playerUI = document.querySelector(".player");
+const compUI = document.querySelector(".comp");
+
+let player = 0;
+let comp = 0;
+
 const compPlay = function () {
   const options = ["Rock", "Paper", "Scissors"];
   let random = Math.floor(Math.random() * options.length);
@@ -5,27 +13,35 @@ const compPlay = function () {
 };
 
 const playRound = function (playerSelect, compSelect) {
-  if (playerSelect === "" || playerSelect === null) {
-    console.log("Wrong input! 😫");
-    return;
-  }
-  playerSelect = playerSelect.toLowerCase();
-  compSelect = compSelect.toLowerCase();
   console.log(playerSelect, compSelect);
   if (
-    playerSelect !== "rock" &&
-    playerSelect !== "scissors" &&
-    playerSelect !== "paper"
+    (playerSelect === "Rock" && compSelect === "Paper") ||
+    (playerSelect === "Paper" && compSelect === "Scissors") ||
+    (playerSelect === "Scissors" && compSelect === "Rock")
   ) {
-    console.log("Wrong input! 😫");
+    results.innerText = `You Lose!😐 ${compSelect} beats ${playerSelect}. `;
+    comp++;
+    compUI.innerText = `AI: ${comp}`;
+  } else if (playerSelect === compSelect) {
+    results.innerText = "Tied! Try again. 🙄";
+  } else {
+    results.innerText = `You win!😄 ${playerSelect} beats ${compSelect}`;
+    player++;
+    playerUI.innerText = `Player: ${player}`;
+  }
+
+  if (player === 5) {
+    results.innerText = "YOU WIN! Humanity is safe for now.";
     return;
   }
-  if (
-    (playerSelect === "rock" && compSelect === "paper") ||
-    (playerSelect === "paper" && compSelect === "scissors") ||
-    (playerSelect === "scissors" && compSelect === "rock")
-  ) {
-    return `You Lose!😐 ${compSelect} beats ${playerSelect} `;
-  } else if (playerSelect === compSelect) return "Tied! Try again. 🙄";
-  else return `You win!😄 ${playerSelect} beats ${compSelect}`;
+  if (comp === 5) {
+    results.innerText = "YOU LOSE! Humanity was doomed from the start.";
+    return;
+  }
 };
+
+choice.forEach((el) =>
+  el.addEventListener("click", function () {
+    playRound(el.alt, compPlay());
+  })
+);
